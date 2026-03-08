@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: The Potted Leaf
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pottedleaf_db
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # Automatically updates DB schema based on entities
+    show-sql: true      # Logs SQL queries in console
+    properties:
+      hibernate:
+        format_sql: true # Pretty-print SQL output
+
+  # (Optional) For easier debugging of Hibernate SQL
+  main:
+    allow-bean-definition-overriding: true
+
+stripe:
+  secret:
+    key: ${STRIPE_SECRET_KEY}
+
+  webhook:
+    secret: ${STRIPE_WEBHOOK_SECRET}
