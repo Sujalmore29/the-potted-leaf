@@ -2,7 +2,7 @@ import { motion } from "motion/react"
 import img from "../assets/heroimg/heroimgcrop.png"
 const Hero = () => {
   return (
-    <section className='relative h-screen w-full overflow-hidden'>
+    <section id="home" className='relative h-screen w-full overflow-hidden'>
         <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0}}

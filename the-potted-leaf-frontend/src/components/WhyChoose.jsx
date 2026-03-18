@@ -24,7 +24,7 @@ const WhyChoose = () => {
         }
     ]
   return (
-    <section className='bg-green-50 py-4 h-screen'>
+    <section id="why-us" className='bg-green-50 py-4 h-screen'>
         <div className='max-w-7xl mx-auto px-6'>
 
             { /* Heading */}

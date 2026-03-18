@@ -5,7 +5,7 @@ import { LuLeaf } from 'react-icons/lu'
 
 const Footer = () => {
   return (
-    <footer className='bg-green-50 border-t border-green-100 mt-24'>
+    <footer className='bg-green-50 border-t border-green-100 mt-2'>
         <div className='max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-4 gap-18'>
 
             {/* Logo Section */}
