@@ -35,8 +35,8 @@ const Navbar = () => {
                         Why Us
                     </button>
 
-                    <button onClick={() => scrollToSection("plant-care")} className=' hover:text-green-700 transition'>
-                        Plant Care
+                    <button onClick={() => scrollToSection("faqs")} className=' hover:text-green-700 transition'>
+                        FAQS
                     </button>
 
                     <button onClick={() => scrollToSection("contact")} className=' hover:text-green-700 transition hover:underline-offset-2'>
