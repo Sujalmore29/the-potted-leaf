@@ -18,6 +18,9 @@ public class UserService {
         user.setRole("USER");
         userRepository.save(user);
     }
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow();
+    }
 
     public UserDTO mapToDTO(User user){
         return UserDTO.builder()
