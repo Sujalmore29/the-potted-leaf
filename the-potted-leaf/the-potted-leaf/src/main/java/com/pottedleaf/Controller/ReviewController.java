@@ -37,12 +37,14 @@ public class ReviewController {
             String email = authentication.getName();
             User user = userService.getUserByEmail(email);
 
-            if(!reviewService.checkAlready_ReviewedOrNot(user.getId(), reviewDTO.getPlantId())) {
-                return ResponseEntity.badRequest().body(new ApiResponse(false, "You already reviewed this product", null));
-            }
             if(!reviewService.hasPurchased(user.getId(), reviewDTO.getPlantId())){
                 return ResponseEntity.badRequest().body(new ApiResponse(false, "You must purchase before reviewing",null));
             }
+
+            if(!reviewService.checkAlready_ReviewedOrNot(user.getId(), reviewDTO.getPlantId())) {
+                return ResponseEntity.badRequest().body(new ApiResponse(false, "You already reviewed this product", null));
+            }
+
 
             Review review = reviewService.addReview(user.getId(),reviewDTO);
 
