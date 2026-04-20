@@ -1,6 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
+
 const instance = axios.create({
     baseURL: "http://localhost:8080"
 });
@@ -16,9 +17,15 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use((response) => response,
     (error) => {
         if(error.response && error.response.status === 403 || error.response.status === 401){
-            localStorage.removeItem("token");
-            window.location.href = "/login";
-            toast.error("Session expired. Please login again.");
+            if(error.config.url.includes("/review/add") || error.config.url.includes("/order") || error.config.url.includes("/payment")){
+                localStorage.removeItem("token");
+                window.location.href = "/login";
+                toast.error("Session expired. Please login again.")
+            }else{
+                localStorage.removeItem("token");
+                window.location.href = "/login";
+                toast.error("Session expired. Please login again.");
+            }
         }
         return Promise.reject(error);
     })

@@ -9,6 +9,7 @@ import Success from './pages/Success'
 import Cancel from './pages/Cancel'
 import Navbar from './components/Navbar'
 import ProtectedRoute from './components/ProtectedRoute'
+import Profile from './pages/Profile'
 
 const App = () => {
   return (
@@ -32,6 +33,11 @@ const App = () => {
         } />
         <Route path='/success' element={<Success />} />
         <Route path='/cancel' element={<Cancel />} />
+        <Route path='/profile' element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
       </Routes>
     </div>
   )

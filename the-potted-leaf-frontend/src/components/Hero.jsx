@@ -62,11 +62,11 @@ const Hero = () => {
 
 function Stat({ number,label }) {
     return (
-        <div className="bg-white p-6 rounded-xl shadow-md text-center">
+        <div className="bg-white/50 p-6 rounded-xl text-center backdrop-blur-md shadow-sm">
             <h3 className="text-2xl font-bold text-green-700">
                 {number}
             </h3>
-            <p className="text-gray-600 text-sm mt-1">
+            <p className="text-gray-700 text-sm mt-1">
                 {label}
             </p>
         </div>
