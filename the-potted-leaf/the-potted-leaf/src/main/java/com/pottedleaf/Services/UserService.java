@@ -27,8 +27,23 @@ public class UserService {
                 .Id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
+                .contact(user.getContact())
+                .gender(user.getGender())
                 .role(user.getRole())
                 .build();
+    }
+
+    public void updateUser(User user, UserDTO userDTO){
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setContact(userDTO.getContact());
+        user.setGender(userDTO.getGender());
+        userRepository.save(user);
+    }
+
+    public void changePassword(User user,String password){
+        user.setPassword(password);
+        saveUser(user);
     }
 
 }

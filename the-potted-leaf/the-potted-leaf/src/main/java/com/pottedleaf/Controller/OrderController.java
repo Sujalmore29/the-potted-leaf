@@ -37,7 +37,7 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/my-orders")
+    @GetMapping("/getOrders")
     public ResponseEntity<?> myOrders(){
         try{
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
