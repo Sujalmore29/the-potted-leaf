@@ -42,6 +42,8 @@ public class SpringSecurity {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/payment/webhook").permitAll()
                         .requestMatchers("/auth/**","/plant/**","/success").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/review/**").permitAll()
+                        .requestMatchers("/review/add").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

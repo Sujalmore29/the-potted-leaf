@@ -1,5 +1,6 @@
 package com.pottedleaf.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,9 +8,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString(exclude = {"orders"})
 @Builder
 public class User {
 
@@ -29,6 +32,13 @@ public class User {
     @Column(nullable = false)
     private String role;
 
+    @Column
+    private String contact;
+
+    @Column
+    private String gender;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Order> orders;
 
