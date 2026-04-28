@@ -49,7 +49,7 @@ public class AuthController {
            String token = jwtUtils.generateToken(request.getEmail());
            return new ResponseEntity<>(token,HttpStatus.OK);
        }catch (Exception e){
-           log.error("Error Occured while login",e);
+           log.error("Error Occurred while login",e);
        }
        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

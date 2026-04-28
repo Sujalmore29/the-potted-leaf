@@ -32,7 +32,7 @@ public class AddressService {
         return addressRepository.save(address);
     }
 
-    public Address getUserAddresses(Long userId){
+    public List<Address> getUserAddresses(Long userId){
         return addressRepository.findByUserId(userId);
     }
 }
