@@ -1,6 +1,7 @@
 package com.pottedleaf.Controller;
 
 import com.pottedleaf.DTO.AddressDTO;
+import com.pottedleaf.Entities.Address;
 import com.pottedleaf.Entities.User;
 import com.pottedleaf.Services.AddressService;
 import com.pottedleaf.Services.UserService;
@@ -23,7 +24,7 @@ public class AddressController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userService.getUserByEmail(email);
-        return ResponseEntity.ok(addressService.addAddress(user.getId(), dto));
+        return ResponseEntity.ok(addressService.addAddress(user, dto));
     }
 
     @GetMapping("get-address")
@@ -33,5 +34,20 @@ public class AddressController {
         User user = userService.getUserByEmail(email);
         return ResponseEntity.ok(addressService.getUserAddresses(user.getId()));
 
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateAddress(@PathVariable Long id, @RequestBody AddressDTO dto){
+        Address addr = addressService.getAddressByID(id);
+
+        addr.setCity(dto.getCity());
+        addr.setStreetAddress(dto.getStreetAddress());
+        addr.setCountry(dto.getCountry());
+        addr.setState(dto.getState());
+        addr.setZipCode(dto.getZipCode());
+        addr.setType(dto.getType());
+
+        addressService.saveAddress(addr);
+        return ResponseEntity.ok("Updated");
     }
 }

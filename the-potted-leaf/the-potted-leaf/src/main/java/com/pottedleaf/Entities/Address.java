@@ -17,12 +17,12 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    private String country;
-    private String state;
-    private String city;
+    private String type;
     private String streetAddress;
+    private String city;
+    private String state;
     private String zipCode;
+    private String country;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

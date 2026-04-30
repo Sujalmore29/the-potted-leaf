@@ -17,10 +17,10 @@ public class AddressService {
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
 
-    public Address addAddress(Long userId, AddressDTO dto){
-        User user = userRepository.findById(userId).orElseThrow();
+    public Address addAddress(User user, AddressDTO dto){
 
         Address address = Address.builder()
+                .type(dto.getType())
                 .country(dto.getCountry())
                 .state(dto.getState())
                 .city(dto.getCity())
@@ -34,5 +34,12 @@ public class AddressService {
 
     public List<Address> getUserAddresses(Long userId){
         return addressRepository.findByUserId(userId);
+    }
+    public Address getAddressByID(Long addrId){
+        return addressRepository.findById(addrId).orElseThrow();
+    }
+
+    public void saveAddress(Address addr){
+        addressRepository.save(addr);
     }
 }
