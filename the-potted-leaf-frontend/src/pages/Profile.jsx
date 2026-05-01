@@ -8,11 +8,68 @@ const Profile = () => {
 
   const [activeTab, setActiveTab] = useState("profile");
   const [user, setUser] = useState({});
+  const [address, setaddress] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [passwordData, setPasswordData] = useState({
+    oldPassword: "",
+    newPassword: ""
+  });
+  const [selectedId, setselectedId] = useState(null)
+  const [form, setform] = useState({
+    type: "Home",
+    country: "",
+    streetAddress: "",
+    city: "",
+    state: "",
+    zipCode: ""
+  });
+
+//select address
+const handleSelect = (addr) => {
+  if(addr.id === selectedId){
+    setselectedId(null);
+    setform({
+      type: "Home",
+      country: "",
+      streetAddress: "",
+      city: "",
+      state: "",
+      zipCode: ""
+    });
+  }else{
+    setselectedId(addr.id);
+    setform({
+      type: addr.type || "Home",
+      country: addr.country || "",
+      streetAddress: addr.streetAddress || "",
+      city: addr.city || "",
+      state: addr.state || "",
+      zipCode: addr.zipCode || ""
+    }); //fills form for editing
+  }
+};
+
+//Add or update address
+const handleSubmit = async () => {
+  try{
+    if(selectedId){
+      //Update
+      await axios.put(`/address/update/${selectedId}`,form);
+      toast.success("Address updated");
+    }else{
+      //Add address
+      await axios.post("/address/add-address", form);
+      toast.success("Address added");
+    }
+  }catch {
+    toast.error("Something went wrong");
+  }
+};
 
   useEffect(() => {
     fetchUser();
     fetchOrders();
+    fetchAddress();
   }, []);
 
   const fetchUser = async () => {
@@ -22,6 +79,11 @@ const Profile = () => {
     } catch {
       toast.error("Failed to load user");
     }
+  }
+
+  const fetchAddress = async () => {
+    const res = await axios.get("/address/get-address");
+    setaddress(Array.isArray(res.data) ? res.data : []);
   }
 
   const fetchOrders = async () => {
@@ -45,12 +107,10 @@ const Profile = () => {
 
   const changePassword = async () => {
     try{
-      await axios.post("/user/change-password", {
-        newPassword: document.getElementById("newPassword").value,
-      });
+      await axios.put("/user/change-password", passwordData);
       toast.success("Password updated");
     } catch (err) {
-      toast.error("Failed to update password");
+      toast.error(err.response?.data || "Failed to update password");
     }
   }
 
@@ -81,9 +141,7 @@ const Profile = () => {
         className='space-y-4'>
         {tabs.map(tab => (
           <motion.div
-            initial={{ opacity: 0, y: 40, scale: 0.55 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.8 }}
+            
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             className={`p-4 rounded-2xl cursor-pointer border ${
@@ -125,12 +183,17 @@ const Profile = () => {
               placeholder='Contact'
               className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
             />
-            <input
-              value={user.gender || ""}
-              onChange={(e) => setUser({...user, gender: e.target.value })}
-              placeholder='Gender'
-              className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
-            />
+            <select
+                  value={user.gender || ""}
+                  onChange={(e) => 
+                    setUser({...user, gender: e.target.value })
+                  }
+                  className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
+                >
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
           </div>
           <div className='flex flex-col mt-4 space-y-4 max-w-md'>
             
@@ -152,11 +215,11 @@ const Profile = () => {
               <div 
                 key={order.id}
                 className='border p-4 rounded-xl mb-4'>
-                  <p className='font-semibold'>Order ID: {order.id}</p>
-                  <p>Plant: {order.plantName}</p>
-                  <p>Total: ₹{order.price}</p>
-                  <p>Status: {order.status}</p>
-                  <p>Date: {order.orderDate}</p>
+                  <p><span className='font-semibold'>Order ID: </span>{order.orderId}</p>
+                  <p><span className='font-semibold'>Plant: </span>{order.plantName}</p>
+                  <p><span className='font-semibold'>Total: </span>₹{order.price}</p>
+                  <p><span className='font-semibold'>Status: </span>{order.status}</p>
+                  <p><span className='font-semibold'>Date: </span>{order.orderDate}</p>
                 </div>
             ))}
           </motion.div>
@@ -166,66 +229,100 @@ const Profile = () => {
         {activeTab === "address" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           transition={{ duration: 0.8}}>
-            <h2 className='text-2xl font-bold mb-6 text-green-800'>Address</h2>
+            <h2 className='px-1 text-2xl font-bold mb-6 text-green-800'>Addresses</h2>
 
-            <div className='grid md:grid-rows-4 max-w-md gap-4'>
-              <input 
-                value={user.name || ""}
-                onChange={(e) => setUser({...user, name: e.target.value })}
-                placeholder='Name'
-                className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
+            {/* Address Card */}
+            <div className='grid md:grid-rows-2 max-w-full gap-4 mb-6'>
+              {address?.map((addr) => (
+                <div 
+                  key={addr.id}
+                  onClick={() => handleSelect(addr)}
+                  className={`cursor-pointer p-4 rounded-xl border transition ${
+                    selectedId === addr.id 
+                      ? "border-green-700 bg-green-200 shadow-md"
+                      : "border-gray-400 bg-white hover:shadow"
+                  }`}
+                > 
+                  <div className='flex justify-between items-center mb-2'>
+                    <span className='font-semibold text-lg text-green-800'>
+                      {addr.type}
+                    </span>
+                    {selectedId === addr.id && (
+                      <span className='text-xs bg-green-600 text-white px-2 py-1 rounded'>
+                        Selected
+                      </span>
+                    )}
+                  </div>
+
+                  <p className='text-md text-gray-700'>
+                    {addr.streetAddress}, {addr.city}
+                  </p>
+                  <p className='text-md text-gray-500'>
+                    {addr.state}, {addr.country} - {addr.zipCode}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Form */}
+            <div className='bg-green-50 p-6 rounded-2xl shadow-sm'>
+              <h3 className='text-lg font-semibold mb-4 text-green-900'>
+                {selectedId ? "Update Address" : "Add New Address"}
+              </h3>
+
+              <div className='grid md:grid-rows gap-4'>
+                {/*Type*/}
+                <select
+                  value={form.type || "Home"}
+                  onChange={(e) => 
+                    setform({ ...form, type: e.target.value })
+                  }
+                  className=' w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
+                >
+                  <option>Home</option>
+                  <option>Office</option>
+                  <option>Shop</option>
+                  <option>Other</option>
+                </select>
+
+                <input
+                  placeholder='Country'
+                  value={form.country || ""}
+                  onChange={(e) => 
+                    setform({ ...form, country: e.target.value })
+                  }
+                  className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
                 />
-
-            <input
-              value={user.email || ""}
-              onChange={(e) => setUser({...user, email: e.target.value })}
-              placeholder='Email'
-              className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
-            />
-            <input
-            value={user.country || ""}
-              onChange={(e) => setUser({...user, country: e.target.value })}
-              placeholder='Country'
-              className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
-            />
-            <input
-            value={user.street_address || ""}
-              onChange={(e) => setUser({...user, street_address: e.target.value })}
-              placeholder='Street Address'
-              className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
-            />
-            <input
-            value={user.city || ""}
-              onChange={(e) => setUser({...user, city: e.target.value })}
-              placeholder='City'
-              className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
-            />
-            <input
-            value={user.state || ""}
-              onChange={(e) => setUser({...user, state: e.target.value })}
-              placeholder='State'
-              className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
-            />
-            <input
-            value={user.zip_code || ""}
-              onChange={(e) => setUser({...user, zip_code: e.target.value })}
-              placeholder='Zip Code'
-              className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
-            />
-            <input
-            value={user.contact || ""}
-              onChange={(e) => setUser({...user, contact: e.target.value })}
-              placeholder='Contact'
-              className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
-            />
-            
-          </div>
-          <div className='flex flex-col mt-4 space-y-4 max-w-md'>
-            
-          </div>
-            <button onClick={updateProfile}
+                <input
+                  value={form.streetAddress || ""}
+                  onChange={(e) => setform({ ...form, streetAddress: e.target.value })}
+                  placeholder='Street Address'
+                  className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
+                />
+                <input
+                  value={form.city || ""}
+                  onChange={(e) => setform({ ...form, city: e.target.value })}
+                  placeholder='City'
+                  className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
+                />
+                <input
+                  value={form.state || ""}
+                  onChange={(e) => setform({ ...form, state: e.target.value })}
+                  placeholder='State'
+                  className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
+                />
+                <input
+                  value={form.zipCode || ""}
+                  onChange={(e) => setform({ ...form, zipCode: e.target.value })}
+                  placeholder='Zip Code'
+                  className='w-full border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600'
+                />
+              </div>
+            </div>
+          
+            <button onClick={handleSubmit}
             className='mt-6 h-12 bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700 transition duration-300'>
-              Add Address
+              {selectedId ? "Update Address" : "Add Address"}
             </button>
             </motion.div>
         )}
@@ -234,8 +331,10 @@ const Profile = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8}}
           className='max-w-md flex flex-col'>
             <h2 className='text-2xl font-bold mb-6 text-green-800'>Password Manager</h2>
-            <input id='oldPassword' placeholder='Old Password' className='border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600' />
-            <input id='newPassword' placeholder='New Password' className='border p-3 rounded-xl mt-6 focus:outline-none focus:ring-2 focus:ring-green-600' />
+
+            <input type="password" placeholder='Old Password' onChange={(e) => setPasswordData({...passwordData, oldPassword:e.target.value })} className='border p-3 rounded-xl mt-2 focus:outline-none focus:ring-2 focus:ring-green-600' />
+
+            <input type="password" placeholder="New Password" onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value })} className='border p-3 rounded-xl mt-6 focus:outline-none focus:ring-2 focus:ring-green-600' />
 
             <button onClick={changePassword} className='bg-green-700 text-white px-6 py-2 rounded-xl mt-6'>
               Update Password

@@ -21,10 +21,8 @@ const App = () => {
             <Home />
           </ProtectedRoute>
         } />
-        <Route path = '/register' element = {
-          <ProtectedRoute>
-            <Register />
-          </ProtectedRoute>
+        <Route path ='/register' element = {
+          <Register />
         } />
         <Route path='/products/:id' element={
           <ProtectedRoute>
