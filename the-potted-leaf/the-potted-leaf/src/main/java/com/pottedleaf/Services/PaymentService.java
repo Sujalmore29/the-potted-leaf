@@ -15,7 +15,7 @@ public class PaymentService {
 
     private final PlantService plantService;
 
-    public String createCheckoutSession(Long plantId, Long userId) throws StripeException{
+    public String createCheckoutSession(Long plantId, Long userId, String size,String color,String material) throws StripeException{
         Plant plant = plantService.getPlantById(plantId);
         if(plant == null){
             throw new RuntimeException("Plant not found");
@@ -27,6 +27,9 @@ public class PaymentService {
                 .setCancelUrl("http://localhost:5173/cancel")
                 .putMetadata("plantId",plantId.toString())
                 .putMetadata("userId",userId.toString())
+                .putMetadata("size", size)
+                .putMetadata("color", color)
+                .putMetadata("material", material)
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
                                 .setQuantity(1L)

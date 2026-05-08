@@ -13,7 +13,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"reviews"})
 @Builder
 public class Plant {
 
@@ -30,11 +29,14 @@ public class Plant {
     @Column(name = "long_description",columnDefinition = "TEXT")
     private String longDescription;
 
-    @Column(name = "pot_size")
-    private String potSize;
+    @Column(name = "sizes")
+    private String sizes;
 
-    @Column(name = "pot_color")
-    private String potColor;
+    @Column(name = "colors")
+    private String colors;
+
+    @Column(name = "materials")
+    private String materials;
 
     @Column(nullable = false,precision = 10,scale = 2)
     private BigDecimal price;

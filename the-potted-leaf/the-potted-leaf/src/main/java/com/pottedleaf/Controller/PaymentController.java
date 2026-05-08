@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/payment")
 @RequiredArgsConstructor
@@ -21,13 +23,16 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/create-session/{plantId}")
-    public ResponseEntity<?> createSession(@PathVariable Long plantId){
+    public ResponseEntity<?> createSession(
+            @PathVariable Long plantId,
+            @RequestBody Map<String,String> body
+    ){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long userId = userDetails.getUser().getId();
         try{
-            String url = paymentService.createCheckoutSession(plantId,userId);
+            String url = paymentService.createCheckoutSession(plantId,userId,body.get("size"),body.get("color"),body.get("material"));
             return ResponseEntity.ok(url);
         } catch (Exception e){
             return ResponseEntity.badRequest().body("Payment session creation failed");

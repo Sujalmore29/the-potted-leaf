@@ -53,7 +53,7 @@ public class PlantController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getPlantById(@PathVariable Long id){
        try{
-           Plant plant = plantService.getPlantById(id);
+           PlantResponseDTO plant = plantService.getPlant(id);
            return ResponseEntity.ok(plant);
        }catch (Exception e){
            log.error("error occured while fetching planty by id",e);

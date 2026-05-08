@@ -30,6 +30,15 @@ public class Order {
     @JsonIgnore
     private Plant plant;
 
+    @Column(name = "potSize")
+    private String selectedSize;
+
+    @Column(name = "potColor")
+    private String selectedColor;
+
+    @Column(name = "potMaterial")
+    private String selectedMaterial;
+
     @Column(name = "payment_id")
     private String paymentId;
 

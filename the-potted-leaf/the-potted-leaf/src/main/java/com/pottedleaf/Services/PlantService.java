@@ -6,6 +6,7 @@ import com.pottedleaf.Repositories.PlantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,11 +31,18 @@ public class PlantService {
                 .name(plant.getName())
                 .shortDescription(plant.getShortDescription())
                 .longDescription(plant.getLongDescription())
-                .potSize(plant.getPotSize())
-                .potColor(plant.getPotColor())
+                .sizes(Arrays.asList(plant.getSizes().split(",")))
+                .colors(Arrays.asList(plant.getColors().split(",")))
+                .materials(Arrays.asList(plant.getMaterials().split(",")))
                 .price(plant.getPrice())
+                .rating(plant.getRating())
                 .imageUrl(plant.getImageUrl())
                 .build();
+    }
+
+    public PlantResponseDTO getPlant(Long plantId){
+        Plant plant = plantRepository.getPlantById(plantId);
+        return mapToDTO(plant);
     }
 
     public Plant getPlantById(Long plant_id){

@@ -12,6 +12,9 @@ public class OrderResponseDTO {
 
     private Long orderId;
     private String plantName;
+    private String potSize;
+    private String potColor;
+    private String potMaterial;
     private BigDecimal price;
     private String status;
     private LocalDateTime orderDate;
