@@ -217,6 +217,9 @@ const handleSubmit = async () => {
                 className='border p-4 rounded-xl mb-4'>
                   <p><span className='font-semibold'>Order ID: </span>{order.orderId}</p>
                   <p><span className='font-semibold'>Plant: </span>{order.plantName}</p>
+                  <p><span className='font-semibold'>Pot Size: </span>{order.potSize}</p>
+                  <p><span className='font-semibold'>Pot Color: </span>{order.potColor}</p>
+                  <p><span className='font-semibold'>Pot Material: </span>{order.potMaterial}</p>
                   <p><span className='font-semibold'>Total: </span>₹{order.price}</p>
                   <p><span className='font-semibold'>Status: </span>{order.status}</p>
                   <p><span className='font-semibold'>Date: </span>{order.orderDate}</p>

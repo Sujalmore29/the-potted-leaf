@@ -11,6 +11,9 @@ const ProductDetails = () => {
     const {id} = useParams();
     const [plant, setPlant] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [selectedSize, setselectedSize] = useState("");
+    const [selectedColor, setselectedColor] = useState("");
+    const [selectedMaterial, setselectedMaterial] = useState("");
 
     useEffect(() => {
         axios.get(`/plant/${id}`)
@@ -24,8 +27,14 @@ const ProductDetails = () => {
     }, [id]);
 
     const handleBuyNow = async() => {
+        if(!selectedSize || !selectedMaterial || !selectedColor){
+            return toast.error("Please select size, material and color before proceeding.");
+        }
         try{
-            const res = await axios.post(`payment/create-session/${plant.id}`);
+            const res = await axios.post(`payment/create-session/${plant.id}`,{
+                size: selectedSize,
+                color: selectedColor,
+                material: selectedMaterial});
             window.location.href = res.data; // stripe checkout URL
         } catch(err) {
             toast.error("Failed to initiate purchase. Please try again later.");
@@ -76,17 +85,59 @@ const ProductDetails = () => {
                 </div>
 
                 <div className='mt-6'>
-                    <h3 className='font-semibold text-lg'>Pot Color</h3>
-                    <p className='mt-2 text-gray-500'>
-                        {plant.potColor}
-                    </p>
+                    <h3 className='font-semibold text-lg mb-2'>Pot Size</h3>
+                    <div className='flex gap-3'>
+                        {plant?.sizes?.map((size) => (
+                            <button 
+                                key={size}
+                                onClick={() => setselectedSize(size)}
+                                className={`px-4 py-2 rounded-full border ${
+                                    selectedSize === size
+                                    ? "bg-yellow-400" 
+                                    : "bg-gray-100 hover:bg-gray-200"
+                                }`}
+                            >
+                                {size}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="mt-6">
+                    <h3 className="font-semibold text-lg mb-2">Pot Material</h3>
+                    <div className="flex gap-3">
+                        {plant?.materials?.map((mat) => (
+                            <button
+                                key={mat}
+                                onClick={() => setselectedMaterial(mat)}
+                                className={`px-4 py-2 rounded-full border ${
+                                    selectedMaterial === mat
+                                    ? "bg-yellow-400"
+                                    : "bg-gray-100 hover:bg-gray-200"
+                                }`}
+                            >
+                            {mat}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 <div className='mt-6'>
-                    <h3 className='font-semibold text-lg'>Pot Size</h3>
-                    <p className='mt-2 text-gray-500'>
-                        {plant.potSize}
-                    </p>
+                    <h3 className='font-semibold text-lg mb-2'>Pot Color</h3>
+                    <div className='flex gap-3'>
+                        {plant?.colors?.map((color) => (
+                            <div
+                                key={color}
+                                onClick={() => setselectedColor(color)}
+                                className={`w-8 h-8 rounded-full border-2 cursor-pointer ${
+                                    selectedColor === color
+                                    ? "border-black"
+                                    : "border-gray-300"
+                                }`}
+                                style={{ backgroundColor: color }}
+                            />
+                        ))}
+                    </div>
                 </div>
 
                 <div className='mt-6'>
