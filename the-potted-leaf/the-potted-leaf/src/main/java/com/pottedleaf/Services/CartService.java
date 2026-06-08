@@ -67,4 +67,23 @@ public class CartService {
                 .toList();
     }
 
+    public void updateQuantity(Long cartItemId,Integer quantity){
+
+        CartItem item = cartItemRepository.findById(cartItemId).orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+        item.setQuantity(quantity);
+        cartItemRepository.save(item);
+
+    }
+
+    public void removeItem(Long cartItemId){
+        CartItem item = cartItemRepository.findById(cartItemId).orElseThrow(() -> new RuntimeException("Cart item not found"));
+        cartItemRepository.delete(item);
+    }
+
+    public void clearCart(User user){
+        Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new RuntimeException("Cart not found"));
+        cartItemRepository.deleteByCart(cart);
+    }
+
 }

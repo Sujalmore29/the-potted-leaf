@@ -1,6 +1,7 @@
 package com.pottedleaf.Controller;
 
 import com.pottedleaf.DTO.AddToCartDTO;
+import com.pottedleaf.DTO.UpdateQuantityDTO;
 import com.pottedleaf.Services.CartService;
 import com.pottedleaf.Services.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +44,43 @@ public class CartController {
             log.error("Exception occurred while getting cart items",e);
         }
         return ResponseEntity.badRequest().body("Error while getting cart items");
+    }
+
+    @PutMapping("/update-quantity/{cartItemId}")
+    public ResponseEntity<?> updateQuantity(@PathVariable Long cartItemId, @RequestBody UpdateQuantityDTO dto){
+        try{
+            cartService.updateQuantity(cartItemId, dto.getQuantity());
+            return ResponseEntity.ok("Quantity updated");
+        }catch (Exception e){
+            log.error("Quantity update failed",e);
+
+            return ResponseEntity.badRequest().body("Failed to update quantity");
+        }
+    }
+
+    @DeleteMapping("/remove/{cartItemId}")
+    public ResponseEntity<?> removeItem(@PathVariable Long cartItemId){
+        try{
+            cartService.removeItem(cartItemId);
+            return ResponseEntity.ok("Item removed");
+        } catch (Exception e){
+            log.error("Item remove failed",e);
+            return ResponseEntity.badRequest().body("Failed to remove item");
+        }
+    }
+
+    @DeleteMapping("/clear")
+    public ResponseEntity<?> clearCart(){
+
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            CustomUserDetails details = (CustomUserDetails) authentication.getPrincipal();
+            cartService.clearCart(details.getUser());
+
+            return ResponseEntity.ok("Cart cleared");
+        } catch (Exception e){
+            log.error("Cart clear failed",e);
+            return ResponseEntity.badRequest().body("Failed to clear cart");
+        }
     }
 }
