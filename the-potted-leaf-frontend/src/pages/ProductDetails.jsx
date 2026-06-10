@@ -41,6 +41,24 @@ const ProductDetails = () => {
         }
     }
 
+    const addToCart = async () => {
+        if(!selectedSize || !selectedMaterial || !selectedColor){
+            return toast.error("Please select size, material and color before proceeding.");
+        }
+        try{
+            await axios.post("/cart/add-to-cart",{
+                plantId: plant.id,
+                quantity: 1,
+                selectedSize,
+                selectedColor,
+                selectedMaterial
+            })
+            toast.success("Item added to cart!");
+        } catch(err) {
+            toast.error("Failed to add item to cart. Please try again later.");
+        }
+    }
+
     if(loading) {
         return <div className='text-center mt-20 bg-blue-600'>Loading...</div>
     }
@@ -58,8 +76,8 @@ const ProductDetails = () => {
                 alt={plant.name}
                 className='w-full h-105 object-cover rounded-2xl shadow-xl' />
 
-                <button onClick={handleBuyNow} className='bg-green-700 text-white px-8 py-3 rounded-xl hover:bg-green-600 transition w-1/2'>
-                    Buy Now
+                <button onClick={addToCart} className='bg-green-700 text-white px-8 py-3 rounded-xl hover:bg-green-600 transition w-1/2'>
+                    Add to Cart
                 </button>
             </div>
 
