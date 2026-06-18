@@ -39,6 +39,9 @@ public class Order {
     @Column(name = "potMaterial")
     private String selectedMaterial;
 
+    @Column(name = "quantity")
+    private Integer quantity;
+
     @Column(name = "payment_id")
     private String paymentId;
 
@@ -47,5 +50,9 @@ public class Order {
 
     @Column(name = "order_date",nullable = false)
     private LocalDateTime orderDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
 }

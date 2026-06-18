@@ -1,5 +1,6 @@
 package com.pottedleaf.Controller;
 
+import com.pottedleaf.DTO.CartCheckoutDTO;
 import com.pottedleaf.Entities.User;
 import com.pottedleaf.Services.CustomUserDetails;
 import com.pottedleaf.Services.PaymentService;
@@ -36,6 +37,23 @@ public class PaymentController {
             return ResponseEntity.ok(url);
         } catch (Exception e){
             return ResponseEntity.badRequest().body("Payment session creation failed");
+        }
+    }
+
+    @PostMapping("/create-cart-session")
+    public ResponseEntity<?> createCartSession(@RequestBody CartCheckoutDTO dto){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getUser().getId();
+
+        try{
+            String url = paymentService.createCartCheckoutSession(
+                    userId,
+                    dto.getAddressId()
+            );
+            return ResponseEntity.ok(url);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Failed to create session");
         }
     }
 }

@@ -15,6 +15,7 @@ public class OrderResponseDTO {
     private String potSize;
     private String potColor;
     private String potMaterial;
+    private Integer quantity;
     private BigDecimal price;
     private String status;
     private LocalDateTime orderDate;

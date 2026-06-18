@@ -1,12 +1,8 @@
 package com.pottedleaf.Services;
 
 import com.pottedleaf.DTO.OrderResponseDTO;
-import com.pottedleaf.Entities.Order;
-import com.pottedleaf.Entities.Plant;
-import com.pottedleaf.Entities.User;
-import com.pottedleaf.Repositories.OrderRepository;
-import com.pottedleaf.Repositories.PlantRepository;
-import com.pottedleaf.Repositories.UserRepository;
+import com.pottedleaf.Entities.*;
+import com.pottedleaf.Repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +15,12 @@ public class OrderService {
 
 
     private final OrderRepository orderRepository;
-
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
-
+    private final AddressRepository addressRepository;
     private final PlantRepository plantRepository;
+
 
     public Order createOrder(User user,Long plant_id){
         Plant plant = plantRepository.findById(plant_id).orElseThrow(() -> new RuntimeException("Plant not fount"));
@@ -51,6 +49,7 @@ public class OrderService {
                 .potSize(order.getSelectedSize())
                 .potColor(order.getSelectedColor())
                 .potMaterial(order.getSelectedMaterial())
+                .quantity(order.getQuantity())
                 .price(order.getPlant().getPrice())
                 .status(order.getStatus())
                 .orderDate(order.getOrderDate())
@@ -74,6 +73,34 @@ public class OrderService {
                 .build();
 
         orderRepository.save(order);
+    }
+
+    public void createOrdersFromCart(Long userId, Long addressId, String paymentIntent){
+        User user = userRepository.findById(userId).orElseThrow();
+
+        Address address = addressRepository.findById(addressId).orElseThrow();
+
+        Cart cart = cartRepository.findByUser(user).orElseThrow();
+
+        List<CartItem> items = cartItemRepository.findByCart(cart);
+
+        for(CartItem item : items){
+
+            Order order = Order.builder()
+                    .user(user)
+                    .plant(item.getPlant())
+                    .address(address)
+                    .selectedSize(item.getSelectedSize())
+                    .selectedColor(item.getSelectedColor())
+                    .selectedMaterial(item.getSelectedMaterial())
+                    .paymentId(paymentIntent)
+                    .status("PAID")
+                    .orderDate(LocalDateTime.now())
+                    .build();
+
+            orderRepository.save(order);
+        }
+        cartItemRepository.deleteAll(items);
     }
 
     public boolean existByPaymentId(String getPaymentIntent){

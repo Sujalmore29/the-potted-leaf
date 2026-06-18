@@ -34,6 +34,7 @@ public class WebhookController {
         } catch (Exception e) {
             return ResponseEntity.ok("Ignored");
         }
+
         if ("checkout.session.completed".equals(event.getType())) {
             EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
 
@@ -44,14 +45,24 @@ public class WebhookController {
             } else {
                 session = (Session) dataObjectDeserializer.deserializeUnsafe();
             }
-            Long plantId = Long.parseLong(session.getMetadata().get("plantId"));
-            Long userId = Long.parseLong(session.getMetadata().get("userId"));
-            String size = session.getMetadata().get("size");
-            String color = session.getMetadata().get("color");
-            String material = session.getMetadata().get("material");
+            String checkoutType = session.getMetadata().get("checkoutType");
+            if("CART".equals(checkoutType)){
+                Long userId = Long.parseLong(session.getMetadata().get("userId"));
+                Long addressId = Long.parseLong(session.getMetadata().get("addressId"));
 
-            if (!orderService.existByPaymentId(session.getPaymentIntent())) {
-                orderService.createOrderAfterPayment(userId, plantId, size, color, material, session.getPaymentIntent());
+               if(!orderService.existByPaymentId(session.getPaymentIntent())){
+                   orderService.createOrdersFromCart(userId, addressId, session.getPaymentIntent());
+               }
+            }else{
+                Long plantId = Long.parseLong(session.getMetadata().get("plantId"));
+                Long userId = Long.parseLong(session.getMetadata().get("userId"));
+                String size = session.getMetadata().get("size");
+                String color = session.getMetadata().get("color");
+                String material = session.getMetadata().get("material");
+
+                if (!orderService.existByPaymentId(session.getPaymentIntent())) {
+                    orderService.createOrderAfterPayment(userId, plantId, size, color, material, session.getPaymentIntent());
+                }
             }
 
         }
