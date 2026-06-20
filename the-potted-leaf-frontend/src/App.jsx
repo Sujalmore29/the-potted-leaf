@@ -10,6 +10,8 @@ import Cancel from './pages/Cancel'
 import Navbar from './components/Navbar'
 import ProtectedRoute from './components/ProtectedRoute'
 import Profile from './pages/Profile'
+import Cart from './pages/Cart'
+import Checkout from './pages/Checkout'
 
 const App = () => {
   return (
@@ -35,6 +37,12 @@ const App = () => {
           <ProtectedRoute>
             <Profile />
           </ProtectedRoute>
+        } />
+        <Route path='/cart' element={
+          <Cart />
+        } />
+        <Route path='/checkout' element={
+          <Checkout />
         } />
       </Routes>
     </div>

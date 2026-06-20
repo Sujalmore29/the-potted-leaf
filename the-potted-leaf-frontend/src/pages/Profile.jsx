@@ -220,7 +220,8 @@ const handleSubmit = async () => {
                   <p><span className='font-semibold'>Pot Size: </span>{order.potSize}</p>
                   <p><span className='font-semibold'>Pot Color: </span>{order.potColor}</p>
                   <p><span className='font-semibold'>Pot Material: </span>{order.potMaterial}</p>
-                  <p><span className='font-semibold'>Total: </span>₹{order.price}</p>
+                  <p><span className='font-semibold'>Quantity: </span>{order.quantity}</p>
+                  <p><span className='font-semibold'>Plant Price: </span>₹{order.price}</p>
                   <p><span className='font-semibold'>Status: </span>{order.status}</p>
                   <p><span className='font-semibold'>Date: </span>{order.orderDate}</p>
                 </div>

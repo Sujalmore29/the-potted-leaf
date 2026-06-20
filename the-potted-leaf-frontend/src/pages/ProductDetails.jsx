@@ -76,8 +76,12 @@ const ProductDetails = () => {
                 alt={plant.name}
                 className='w-full h-105 object-cover rounded-2xl shadow-xl' />
 
-                <button onClick={addToCart} className='bg-green-700 text-white px-8 py-3 rounded-xl hover:bg-green-600 transition w-1/2'>
+                <button onClick={addToCart} className='bg-yellow-400 text-gray-800 text-shadow-md px-8 py-3 rounded-xl  w-md hover:bg-yellow-500 transition'>
                     Add to Cart
+                </button>
+                <button onClick={handleBuyNow}
+                    className='bg-green-700 text-white px-8 py-3 rounded-xl hover:bg-green-600 transition w-md'>
+                    Buy Now
                 </button>
             </div>
 

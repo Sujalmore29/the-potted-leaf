@@ -2,11 +2,12 @@ import axios from '../api/axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import Navbar from '../components/Navbar';
-import {motion} from "motion/react";
+import {motion, spring} from "motion/react";
 import CartItem from '../components/CartItem';
 import { useNavigate } from 'react-router-dom';
 import CartSummary from '../components/CartSummary';
 import Footer from '../components/Footer';
+import { div } from 'framer-motion/client';
 
 const Cart = () => {
 
@@ -112,6 +113,25 @@ const Cart = () => {
 
           <div className='grid lg:grid-cols-3 gap-8'>
             <div className='lg:col-span-2 space-y-5'>
+              {cart.length === 0 && (
+                <img src="../assets/emptyCart/empty-cart.png" alt="Empty Cart" className='w-64 mx-auto mb-4' />
+              )}
+              {cart.length === 0 && (
+                <p className='text-gray-500 text-center py-20 ml-5 text-lg'>
+                  Your cart is empty.
+                </p>
+              )}
+              {cart.length === 0 && (
+                <div className='ml-4 flex  justify-center'>
+                  <motion.button 
+                  whileHover = {{ scale: 1.1
+                  }}
+                  whileTap = {{
+                    scale: 1
+                  }}onClick={() => navigate("/")} className='bg-green-700 rounded-2xl w-2xs py-3 px-10 text-2xl text-white 
+                  hover:bg-green-800'>Explore</motion.button>
+                </div>
+              )}
               {cart.map(item => (
                 <CartItem
                   key={item.cartItemId}

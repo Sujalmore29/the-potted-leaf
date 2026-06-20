@@ -4,7 +4,7 @@ const CartSummary = ({ cart  }) => {
 
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   return (
-    <div className='bg-white rounded-2xl shadow-md p-6 sticky top-28'>
+    <div className='bg-white rounded-2xl shadow-md p-6 top-28'>
         <h2 className='text-xl font-bold mb-5'>
             Order Summary
         </h2>
