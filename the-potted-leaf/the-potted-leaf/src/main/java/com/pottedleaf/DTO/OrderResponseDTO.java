@@ -1,5 +1,6 @@
 package com.pottedleaf.DTO;
 
+import com.pottedleaf.Entities.Address;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,4 +20,5 @@ public class OrderResponseDTO {
     private BigDecimal price;
     private String status;
     private LocalDateTime orderDate;
+    private AddressDTO addressDTO;
 }

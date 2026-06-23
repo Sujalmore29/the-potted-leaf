@@ -93,6 +93,7 @@ public class OrderService {
                     .selectedSize(item.getSelectedSize())
                     .selectedColor(item.getSelectedColor())
                     .selectedMaterial(item.getSelectedMaterial())
+                    .quantity(item.getQuantity())
                     .paymentId(paymentIntent)
                     .status("PAID")
                     .orderDate(LocalDateTime.now())

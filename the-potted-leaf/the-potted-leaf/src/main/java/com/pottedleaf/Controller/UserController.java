@@ -3,6 +3,7 @@ package com.pottedleaf.Controller;
 import com.pottedleaf.DTO.ChangePasswordDTO;
 import com.pottedleaf.DTO.UserDTO;
 import com.pottedleaf.Entities.User;
+import com.pottedleaf.Services.AdminService;
 import com.pottedleaf.Services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
 @Slf4j
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final AdminService adminService;
 
     @GetMapping("/getUser")
     public ResponseEntity<?> getUser(){
