@@ -12,6 +12,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Profile from './pages/Profile'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
+import AdminDashboard from './pages/AdminDashboard'
 
 const App = () => {
   return (
@@ -43,6 +44,10 @@ const App = () => {
         } />
         <Route path='/checkout' element={
           <Checkout />
+        } />
+        <Route path='/admin'
+        element={
+          <AdminDashboard />
         } />
       </Routes>
     </div>
