@@ -28,7 +28,7 @@ public class AdminController {
         return ResponseEntity.ok("User promoted");
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/user/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id){
         adminService.deleteUser(id);
         return ResponseEntity.ok("Deleted");

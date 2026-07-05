@@ -41,6 +41,9 @@ public class Plant {
     @Column(nullable = false,precision = 10,scale = 2)
     private BigDecimal price;
 
+    @Column(name = "stock_quantity",nullable = false)
+    private Integer stockQuantity;
+
     private Double rating;
 
     @Column(name = "imageUrl")

@@ -60,4 +60,15 @@ public class PlantController {
        }
        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping("stock/{id}")
+    public ResponseEntity<?> getStock(@PathVariable Long id){
+        return ResponseEntity.ok(plantService.remainingStock(id));
+    }
+
+    @PutMapping("/reduce-stock/{id}")
+    public ResponseEntity<?> reduceStock(@PathVariable Long id ,@RequestParam Integer quantity){
+        plantService.reduceStock(id,quantity);
+        return ResponseEntity.ok("Updated");
+    }
 }

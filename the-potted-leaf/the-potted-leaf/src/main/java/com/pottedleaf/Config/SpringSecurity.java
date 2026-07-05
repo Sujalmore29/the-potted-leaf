@@ -43,6 +43,7 @@ public class SpringSecurity {
                         .requestMatchers(HttpMethod.POST, "/payment/webhook").permitAll()
                         .requestMatchers("/auth/**","/plant/**","/success").permitAll()
                         .requestMatchers(HttpMethod.GET, "/review/**").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("Role_ADMIN")
                         .requestMatchers("/review/add").authenticated()
                         .anyRequest().authenticated()
                 )

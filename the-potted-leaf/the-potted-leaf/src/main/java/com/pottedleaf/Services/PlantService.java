@@ -37,6 +37,7 @@ public class PlantService {
                 .price(plant.getPrice())
                 .rating(plant.getRating())
                 .imageUrl(plant.getImageUrl())
+                .stockQuantity(plant.getStockQuantity())
                 .build();
     }
 
@@ -51,5 +52,25 @@ public class PlantService {
 
     public Plant savePlant(Plant plant){
         return plantRepository.save(plant);
+    }
+
+    public void reduceStock(Long plantId, Integer quantity){
+        Plant plant = plantRepository.findById(plantId).orElseThrow(() -> new RuntimeException("Plant not found"));
+
+        if(plant.getStockQuantity() < quantity){
+            throw new RuntimeException("Only " + plant.getStockQuantity() + "plant(s) left in stock");
+        }
+
+        plant.setStockQuantity(plant.getStockQuantity() - quantity);
+        plantRepository.save(plant);
+    }
+
+    public boolean inStock(Long plantId,Integer quantity){
+        Plant plant = plantRepository.findById(plantId).orElseThrow(() -> new RuntimeException("Plant not found"));
+        return plant.getStockQuantity() >= quantity;
+    }
+
+    public Integer remainingStock(Long plantId){
+        return plantRepository.findById(plantId).orElseThrow().getStockQuantity();
     }
 }

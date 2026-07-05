@@ -18,6 +18,7 @@ public class PlantResponseDTO {
     private List<String> colors;
     private List<String> materials;
     private BigDecimal price;
+    private Integer stockQuantity;
     private Double rating;
     private String imageUrl;
 }
