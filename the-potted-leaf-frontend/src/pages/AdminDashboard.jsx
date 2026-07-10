@@ -102,7 +102,7 @@ const AdminDashboard = () => {
 
                     {/* Content */}
 
-                    <div className="md:col-span-4 bg-green-100 rounded-2xl p-8">
+                    <div className="md:col-span-4 bg-green-600 rounded-2xl p-8">
 
                         {/* Dashboard */}
                         {activeTab === "dashboard" && (
@@ -159,8 +159,10 @@ const AdminDashboard = () => {
                                             </div>
 
                                             <div className="flex gap-2">
-                                                <button onClick={() => promoteUser(user.id)}
+                                                {user.role !== "ADMIN" && (
+                                                    <button onClick={() => promoteUser(user.id)}
                                                 className="bg-green-700 text-white px-4 py-2 rounded-xl">Make Admin</button>
+                                                )}
 
                                                 <button onClick={() => deleteUser(user.id)}
                                                 className="bg-red-600 text-white px-4 py-2 rounded-xl">Delete</button>
@@ -225,11 +227,10 @@ const AdminDashboard = () => {
                                         className="bg-white rounded-2xl overflow-hidden shadow">
                                             <img src={`/assets/plants/${plant.imageUrl}`}
                                             className="h-56 w-full object-cover" alt="" />
-                                            <div className="p-4">
-                                                <h3 className="font-bold">{plant.plantName}</h3>
-                                                <p>
-                                                    ₹{plant.price}
-                                                </p>
+                                            <div className="p-4 flex flex-col gap-2">
+                                                <h3 className="font-bold text-lg text-green-800">{plant.name}</h3>
+                                                <h3 className="font-semibold">Stock: {plant.stockQuantity}</h3>
+                                                <h3 className="font-semibold">Price: ₹{plant.price}</h3>
                                                 <button onClick={() => deletePlant(plant.id)}
                                                 className="mt-4 bg-red-600 text-white px-4 py-2 rounded-xl">Delete</button>
                                             </div>

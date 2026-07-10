@@ -34,6 +34,11 @@ const Cart = () => {
         item => item.cartItemId === id
       );
 
+      if(item.quantity >= item.stockQuantity){
+        toast.error("Only " + item.stockQuantity + " items are available in stock");
+        return;
+      }
+
       await axios.put(`/cart/update-quantity/${id}`, {
         quantity: item.quantity + 1
       });
@@ -67,7 +72,6 @@ const Cart = () => {
       await axios.put(`/cart/update-quantity/${id}`, {
         quantity: item.quantity - 1
       });
-
       setCart(prev =>
         prev.map(item => 
           item.cartItemId === id

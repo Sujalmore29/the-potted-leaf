@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { motion, scale } from 'motion/react';
 import toast from 'react-hot-toast';
 import Navbar from '../components/Navbar';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
 
@@ -23,6 +24,8 @@ const Profile = () => {
     state: "",
     zipCode: ""
   });
+
+  const navigate = useNavigate();
 
 //select address
 const handleSelect = (addr) => {
@@ -150,6 +153,12 @@ const handleSubmit = async () => {
               {tab.label}
           </motion.div>
         ))}
+        {user.role === "ADMIN" && (
+          <button onClick={() => navigate("/admin")}
+          className='rounded-2xl bg-amber-500 p-4 cursor-pointer font-semibold text-white hover:bg-amber-600 hover:scale-105 transition'>
+            Admin Dashboard
+          </button>
+        )}
       </motion.div>
 
       {/* Content */ }

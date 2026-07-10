@@ -1,7 +1,7 @@
 import axios from "../api/axios.js";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import { motion, scale } from "motion/react";
@@ -9,6 +9,9 @@ import { motion, scale } from "motion/react";
 const Checkout = () => {
     const [addresses, setAddresses] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState(null);
+
+    const location = useLocation();
+    const checkout = location.state;
 
     const navigate = useNavigate();
     const handleSelect = (addr) => {
@@ -53,14 +56,29 @@ const Checkout = () => {
     }
 
     const proceedToPayment = async () => {
-        try{
-            const res = await axios.post("/payment/create-cart-session",{
-                addressId:selectedAddress.id
+        if(checkout.type === "BUY_NOW"){
+            try{
+                const res = await axios.post("payment/create-session/"+checkout.plantId,{
+                size: checkout.size,
+                color: checkout.color,
+                material: checkout.material,
+                quantity: checkout.quantity,
+                addressId: selectedAddress.id
             });
-            window.location.href = res.data;
-        } catch(err){
+            window.location.href = res.data; // stripe checkout URL
+            } catch(err){
+                toast.error("Failed to proceed to payment. Please try again later.");
+            }
+       }else{
+         try{
+            const res = await axios.post("/payment/create-cart-session",{
+                    addressId:selectedAddress.id
+                });
+                window.location.href = res.data;
+         }catch(err){
             toast.error("Failed to proceed to payment. Please try again later.");
-        }
+         }
+       }
     }
 
   return (

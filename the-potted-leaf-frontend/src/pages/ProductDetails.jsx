@@ -1,11 +1,12 @@
 import axios from '../api/axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ReviewSection from '../components/ReviewSection';
 import Features from '../components/Features';
+import { color } from 'framer-motion';
 
 const ProductDetails = () => {
     const {id} = useParams();
@@ -14,6 +15,9 @@ const ProductDetails = () => {
     const [selectedSize, setselectedSize] = useState("");
     const [selectedColor, setselectedColor] = useState("");
     const [selectedMaterial, setselectedMaterial] = useState("");
+    const [quantity, setQuantity] = useState(1);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`/plant/${id}`)
@@ -31,11 +35,23 @@ const ProductDetails = () => {
             return toast.error("Please select size, material and color before proceeding.");
         }
         try{
-            const res = await axios.post(`payment/create-session/${plant.id}`,{
-                size: selectedSize,
-                color: selectedColor,
-                material: selectedMaterial});
-            window.location.href = res.data; // stripe checkout URL
+            navigate("/checkout",{
+                state:{
+                    type:"BUY_NOW",
+                    plantId: plant.id,
+                    size: selectedSize,
+                    color: selectedColor,
+                    material: selectedMaterial,
+                    quantity: 1
+                }
+            })
+            // const res = await axios.post(`payment/create-session/${plant.id}`,{
+            //     size: selectedSize,
+            //     color: selectedColor,
+            //     material: selectedMaterial,
+            //     quantity: 1
+            // });
+            // window.location.href = res.data; // stripe checkout URL
         } catch(err) {
             toast.error("Failed to initiate purchase. Please try again later.");
         }
@@ -76,12 +92,11 @@ const ProductDetails = () => {
                 alt={plant.name}
                 className='w-full h-105 object-cover rounded-2xl shadow-xl' />
 
-                <button onClick={addToCart} className='bg-yellow-400 text-gray-800 text-shadow-md px-8 py-3 rounded-xl  w-md hover:bg-yellow-500 transition'>
-                    Add to Cart
+                <button disabled={plant.stockQuantity === 0} onClick={addToCart} className={`bg-yellow-400 text-gray-800 text-shadow-md px-8 py-3 rounded-xl  w-md hover:bg-yellow-500 transition ${plant.stockQuantity === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    {plant.stockQuantity === 0 ? "Out Of Stock" : "Add to Cart"}
                 </button>
-                <button onClick={handleBuyNow}
-                    className='bg-green-700 text-white px-8 py-3 rounded-xl hover:bg-green-600 transition w-md'>
-                    Buy Now
+                <button disabled={plant.stockQuantity === 0} onClick={handleBuyNow}
+                    className={`bg-green-700 text-white px-8 py-3 rounded-xl hover:bg-green-600 transition w-md ${plant.stockQuantity === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}>{plant.stockQuantity === 0 ? "Out Of Stock" : "Buy Now"}
                 </button>
             </div>
 
@@ -92,6 +107,19 @@ const ProductDetails = () => {
                 <h1 className='text-4xl font-bold text-green-800'>
                     {plant.name}
                 </h1>
+                <div className='mt-2'>
+                    {plant.stockQuantity > 5 && (
+                        <span className='text-green-600 font-semibold'>In Stock ({plant.stockQuantity})</span>
+                    )}
+
+                    {plant.stockQuantity > 0 && plant.stockQuantity <= 5 && (
+                        <span className='text-orange-500 font-semibold'>Only  {plant.stockQuantity} left in stock</span>
+                    )}
+
+                    {plant.stockQuantity === 0 && (
+                        <span className='text-red-600 font-bold'>Out Of Stock</span>
+                    )}
+                </div>
                 <p className='text-2xl mt-4 text-green-700 font-semibold'>
                     ₹{plant.price}
                 </p>
