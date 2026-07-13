@@ -50,4 +50,11 @@ public class OrderController {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping("/latest")
+    public ResponseEntity<?> latestOrders(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return ResponseEntity.ok(orderService.getLatestOrders(userDetails.getUser()));
+    }
 }

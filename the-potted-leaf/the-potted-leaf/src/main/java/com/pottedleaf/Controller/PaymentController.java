@@ -26,14 +26,15 @@ public class PaymentController {
     @PostMapping("/create-session/{plantId}")
     public ResponseEntity<?> createSession(
             @PathVariable Long plantId,
-            @RequestBody Map<String,String> body
+            @RequestBody Map<String,Object> body
     ){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long userId = userDetails.getUser().getId();
+        Long addressId = Long.valueOf(body.get("addressId").toString());
         try{
-            String url = paymentService.createCheckoutSession(plantId,userId,body.get("size"),body.get("color"),body.get("material"));
+            String url = paymentService.createCheckoutSession(plantId,userId, (String) body.get("size"),(String) body.get("color"),(String) body.get("material"),(Integer) body.get("quantity"),addressId);
             return ResponseEntity.ok(url);
         } catch (Exception e){
             return ResponseEntity.badRequest().body("Payment session creation failed");

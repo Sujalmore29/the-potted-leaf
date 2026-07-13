@@ -20,6 +20,8 @@ public class OrderService {
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
     private final PlantRepository plantRepository;
+    private final PlantService plantService;
+
 
 
     public Order createOrder(User user,Long plant_id){
@@ -45,21 +47,30 @@ public class OrderService {
     private OrderResponseDTO mapToDTO(Order order){
         return OrderResponseDTO.builder()
                 .orderId(order.getId())
+                .imageUrl(order.getPlant().getImageUrl())
                 .plantName(order.getPlant().getName())
                 .potSize(order.getSelectedSize())
                 .potColor(order.getSelectedColor())
                 .potMaterial(order.getSelectedMaterial())
                 .quantity(order.getQuantity())
+                .paymentId(order.getPaymentId())
                 .price(order.getPlant().getPrice())
                 .status(order.getStatus())
+                .addressId(order.getAddress().getId())
+                .streetAddress(order.getAddress().getStreetAddress())
+                .city(order.getAddress().getCity())
+                .state(order.getAddress().getState())
+                .country(order.getAddress().getCountry())
+                .zipCode(order.getAddress().getZipCode())
                 .orderDate(order.getOrderDate())
                 .build();
     }
 
-    public void createOrderAfterPayment(Long userId, Long plantId, String size, String color, String material,String paymentIntent){
+    public void createOrderAfterPayment(Long userId, Long plantId, String size, String color, String material,Integer quantity, Long addressId, String paymentIntent){
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         Plant plant = plantRepository.findById(plantId).orElseThrow(() -> new RuntimeException("Plant not found"));
+        Address address = addressRepository.findById(addressId).orElseThrow(() -> new RuntimeException("Address not found"));
 
         Order order = Order.builder()
                 .user(user)
@@ -68,6 +79,8 @@ public class OrderService {
                 .selectedColor(color)
                 .selectedMaterial(material)
                 .paymentId(paymentIntent)
+                .quantity(quantity)
+                .address(address)
                 .status("PAID")
                 .orderDate(LocalDateTime.now())
                 .build();
@@ -99,12 +112,23 @@ public class OrderService {
                     .orderDate(LocalDateTime.now())
                     .build();
 
+            plantService.reduceStock(item.getPlant().getId(), item.getQuantity());
             orderRepository.save(order);
+
         }
         cartItemRepository.deleteAll(items);
     }
 
     public boolean existByPaymentId(String getPaymentIntent){
        return orderRepository.existsByPaymentId(getPaymentIntent);
+    }
+
+    public List<OrderResponseDTO> getLatestOrders(User user){
+        return orderRepository
+                .findByUserOrderByOrderDateDesc(user)
+                .stream()
+                .limit(5)
+                .map(this::mapToDTO)
+                .toList();
     }
 }

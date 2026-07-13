@@ -1,6 +1,7 @@
 package com.pottedleaf.Controller;
 
 import com.pottedleaf.Services.OrderService;
+import com.pottedleaf.Services.PlantService;
 import com.stripe.exception.EventDataObjectDeserializationException;
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
@@ -19,6 +20,7 @@ public class WebhookController {
     private String webHookSecret;
 
     private final OrderService orderService;
+    private final PlantService plantService;
     @PostMapping("/webhook")
     public ResponseEntity<String> handleStripeWebhook(
             @RequestBody String payload,
@@ -59,9 +61,12 @@ public class WebhookController {
                 String size = session.getMetadata().get("size");
                 String color = session.getMetadata().get("color");
                 String material = session.getMetadata().get("material");
+                Integer quantity = Integer.parseInt(session.getMetadata().get("quantity"));
+                Long addressId = Long.parseLong(session.getMetadata().get("addressId"));
 
                 if (!orderService.existByPaymentId(session.getPaymentIntent())) {
-                    orderService.createOrderAfterPayment(userId, plantId, size, color, material, session.getPaymentIntent());
+                    orderService.createOrderAfterPayment(userId, plantId, size, color, material, quantity, addressId, session.getPaymentIntent());
+                    plantService.reduceStock(plantId,quantity);
                 }
             }
 

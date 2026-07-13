@@ -5,6 +5,7 @@ import com.pottedleaf.Entities.Plant;
 import com.pottedleaf.Repositories.PlantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,6 +55,7 @@ public class PlantService {
         return plantRepository.save(plant);
     }
 
+    @Transactional
     public void reduceStock(Long plantId, Integer quantity){
         Plant plant = plantRepository.findById(plantId).orElseThrow(() -> new RuntimeException("Plant not found"));
 

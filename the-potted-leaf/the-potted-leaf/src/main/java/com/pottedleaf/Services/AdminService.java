@@ -79,7 +79,6 @@ public class AdminService {
                 .price(order.getPlant().getPrice())
                 .status(order.getStatus())
                 .orderDate(order.getOrderDate())
-                .addressDTO(getAddress(order.getAddress().getId()))
                 .build();
     }
 

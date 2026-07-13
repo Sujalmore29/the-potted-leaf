@@ -26,4 +26,6 @@ public class CartItemResponseDTO {
     private String selectedColor;
 
     private String selectedMaterial;
+
+    private Integer stockQuantity;
 }

@@ -24,7 +24,7 @@ public class PaymentService {
     private final CartItemRepository cartItemRepository;
     private final AddressRepository addressRepository;
 
-    public String createCheckoutSession(Long plantId, Long userId, String size,String color,String material) throws StripeException{
+    public String createCheckoutSession(Long plantId, Long userId, String size,String color,String material,Integer quantity,Long addressId) throws StripeException{
         Plant plant = plantService.getPlantById(plantId);
         if(plant == null){
             throw new RuntimeException("Plant not found");
@@ -32,13 +32,15 @@ public class PaymentService {
 
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("http://localhost:5173/success")
-                .setCancelUrl("http://localhost:5173/cancel")
+                .setSuccessUrl("http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}")
+                .setCancelUrl("http://localhost:5173/payment-cancel")
                 .putMetadata("plantId",plantId.toString())
                 .putMetadata("userId",userId.toString())
                 .putMetadata("size", size)
                 .putMetadata("color", color)
                 .putMetadata("material", material)
+                .putMetadata("quantity",String.valueOf(quantity))
+                .putMetadata("addressId",String.valueOf(addressId))
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
                                 .setQuantity(1L)
@@ -67,7 +69,12 @@ public class PaymentService {
         Cart cart = cartRepository.findByUserId(userId).orElseThrow();
 
         List<CartItem> items = cartItemRepository.findByCart(cart);
-
+        for(CartItem item : items){
+            Plant plant = item.getPlant();
+            if(plant.getStockQuantity() < item.getQuantity()){
+                throw new RuntimeException(plant.getName() + " has only " + plant.getStockQuantity() + " left ");
+            }
+        }
         BigDecimal total = items.stream()
                 .map(item ->
                         item.getPlant()
@@ -87,8 +94,8 @@ public class PaymentService {
                                 SessionCreateParams.Mode.PAYMENT
                         )
 
-                        .setSuccessUrl("http://localhost:5173/success")
-                        .setCancelUrl("http://localhost:5173/cancel")
+                        .setSuccessUrl("http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}")
+                        .setCancelUrl("http://localhost:5173/payment-cancel")
                         .putMetadata(
                                 "checkoutType",
                                 "CART"

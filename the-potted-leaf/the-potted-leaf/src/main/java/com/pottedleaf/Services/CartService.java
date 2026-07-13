@@ -56,6 +56,7 @@ public class CartService {
                 .selectedSize(cartItem.getSelectedSize())
                 .selectedColor(cartItem.getSelectedColor())
                 .selectedMaterial(cartItem.getSelectedMaterial())
+                .stockQuantity(cartItem.getPlant().getStockQuantity())
                 .build();
     }
     public List<CartItemResponseDTO> getCart(User user){
