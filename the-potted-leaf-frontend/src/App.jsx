@@ -5,7 +5,6 @@ import { Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import ProductDetails from './pages/ProductDetails'
-import Success from './pages/Success'
 import Cancel from './pages/Cancel'
 import Navbar from './components/Navbar'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -13,6 +12,9 @@ import Profile from './pages/Profile'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
 import AdminDashboard from './pages/AdminDashboard'
+import PaymentSuccess from './pages/PaymentSuccess'
+import Orders from './pages/Orders'
+import OrderDetails from './pages/OrderDetails'
 
 const App = () => {
   return (
@@ -32,7 +34,7 @@ const App = () => {
             <ProductDetails />
           </ProtectedRoute>
         } />
-        <Route path='/success' element={<Success />} />
+        <Route path='/payment-success' element={<PaymentSuccess />} />
         <Route path='/cancel' element={<Cancel />} />
         <Route path='/profile' element={
           <ProtectedRoute>
@@ -48,6 +50,13 @@ const App = () => {
         <Route path='/admin'
         element={
           <AdminDashboard />
+        } />
+        <Route path="/orders" 
+        element={
+          <Orders />
+        } />
+        <Route path='/orders/:orderId' element={
+          <OrderDetails />
         } />
       </Routes>
     </div>

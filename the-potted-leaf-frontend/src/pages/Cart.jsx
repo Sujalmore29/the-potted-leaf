@@ -150,7 +150,17 @@ const Cart = () => {
             <div>
               <CartSummary cart={cart} />
 
-              <button onClick={() => navigate("/checkout")}
+              <button onClick={() => {
+                if(cart.length === 0){
+                  toast.error("Your cart is empty, please add some plants!!")
+                }else{
+                  navigate("/checkout",{
+                              state:{
+                                  type:"CART",
+                              }
+                          })
+                }
+              }}
                 className='w-full mt-5 bg-green-700 text-white py-4 rounded-xl hover:bg-green-800'>
                   Proceed To Checkout
                 </button>

@@ -206,7 +206,8 @@ const AdminDashboard = () => {
 
                                                 <option>SHIPPED</option>
 
-                                                <option>DELIVERED</option>
+                       +                         <option>DELIVERED</option>
+                                                <option>CANCELLED</option>
                                             </select>
                                         </div>
                                         </div>
