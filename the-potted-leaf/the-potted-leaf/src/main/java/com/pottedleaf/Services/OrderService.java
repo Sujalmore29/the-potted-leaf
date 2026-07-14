@@ -48,6 +48,7 @@ public class OrderService {
         return OrderResponseDTO.builder()
                 .orderId(order.getId())
                 .imageUrl(order.getPlant().getImageUrl())
+                .plantId(order.getPlant().getId())
                 .plantName(order.getPlant().getName())
                 .potSize(order.getSelectedSize())
                 .potColor(order.getSelectedColor())
@@ -130,5 +131,14 @@ public class OrderService {
                 .limit(5)
                 .map(this::mapToDTO)
                 .toList();
+    }
+
+    public OrderResponseDTO getOrders(User user,Long orderId){
+
+        Order order = orderRepository
+                .findByIdAndUser(orderId, user)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        return mapToDTO(order);
     }
 }

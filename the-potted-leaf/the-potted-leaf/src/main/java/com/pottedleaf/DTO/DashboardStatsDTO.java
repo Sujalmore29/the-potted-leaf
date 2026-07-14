@@ -16,4 +16,14 @@ public class DashboardStatsDTO {
     private Long totalOrders;
 
     private BigDecimal totalRevenue;
+
+    private Long paidOrders;
+
+    private Long processingOrders;
+
+    private Long shippedOrders;
+
+    private Long deliveredOrders;
+
+    private Long cancelledOrders;
 }

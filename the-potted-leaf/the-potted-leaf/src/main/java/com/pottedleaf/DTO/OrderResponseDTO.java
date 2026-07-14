@@ -13,6 +13,7 @@ public class OrderResponseDTO {
 
     private String imageUrl;
     private Long orderId;
+    private Long plantId;
     private String plantName;
     private String potSize;
     private String potColor;
