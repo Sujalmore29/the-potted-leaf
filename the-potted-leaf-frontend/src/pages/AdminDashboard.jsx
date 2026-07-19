@@ -15,6 +15,22 @@ const AdminDashboard = () => {
 
     const [plants, setPlants] = useState([]);
 
+    const [statusFilter, setStatusFilter] = useState("ALL");
+
+    const [showPlantModal, setShowPlantModal] = useState(false);
+
+    const [plantForm, setPlantForm] = useState({
+        name:"",
+        shortDescription:"",
+        longDescription:"",
+        price:"",
+        stockQuantity:"",
+        sizes:"",
+        colors:"",
+        materials:"",
+        imageUrl:""
+    });
+
     useEffect(() => {
         fetchDashboard();
     }, []);
@@ -75,6 +91,28 @@ const AdminDashboard = () => {
             toast.error("Failed");
         }
     };
+
+    const createPlant = async() => {
+        try{
+            await axios.post("/plant",plantForm);
+            toast.success("Plant Added Successfully");
+            setPlantForm({
+                name:"",
+                shortDescription:"",
+                longDescription:"",
+                price:"",
+                stockQuantity:"",
+                sizes:"",
+                colors:"",
+                materials:"",
+                imageUrl:""
+            })
+            setShowPlantModal(false);
+            fetchDashboard();
+        }catch{
+            toast.error("Failed");
+        }
+    }
 
     return(
         <div className="min-h-screen bg-green-50">
@@ -137,6 +175,34 @@ const AdminDashboard = () => {
                                         </h1>
                                     </div>
                                 </div>
+                                <div className="grid md:grid-cols-5 gap-4 mt-6">
+                                    <div className="bg-white rounded-xl p-5 shadow">
+                                        <h4>Paid</h4>
+                                        <h2 className="text-3xl font-bold text-green-700">
+                                            {stats.paidOrders}
+                                        </h2>
+                                    </div>
+
+                                    <div className="bg-white rounded-xl p-5 shadow">
+                                        <h4>Processing</h4>
+                                        <h2 className="text-3xl font-bold text-yellow-500">{stats.processingOrders}</h2>
+                                    </div>
+
+                                    <div className="bg-white rounded-xl p-5 shadow">
+                                        <h4>Shipped</h4>
+                                        <h2 className="text-3xl font-bold text-yellow-500">{stats.shippedOrders}</h2>
+                                    </div>
+
+                                    <div className="bg-white rounded-xl p-5 shadow">
+                                        <h4>Delivered</h4>
+                                        <h2 className="text-3xl font-bold text-yellow-500">{stats.deliveredOrders}</h2>
+                                    </div>
+
+                                    <div className="bg-white rounded-xl p-5 shadow">
+                                        <h4>Cancelled</h4>
+                                        <h2 className="text-3xl font-bold text-yellow-500">{stats.cancelledOrders}</h2>
+                                    </div>
+                                </div>
                             </motion.div>
                         )}
 
@@ -181,9 +247,24 @@ const AdminDashboard = () => {
                                     Orders
                                 </h2>
 
+                                <select value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                                className="border rounded-xl p-3 mb-5 bg-green-50">
+                                    <option value="ALL">All Orders</option>
+                                    <option value="PAID">Paid</option>
+                                    <option value="PROCESSING">Processing</option>
+                                    <option value="SHIPPED">Shipped</option>
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="CANCELLED">Cancelled</option>
+                                </select>
                                 <div className="space-y-4">
-                                    {orders.map(order => (
-                                        <div key={order.orderId} className="bg-white p-4 rounded-xl">
+                                    {orders.filter(order => {
+                                        if(statusFilter === "ALL"){
+                                            return true;
+                                        }
+                                        return order.status === statusFilter;
+                                    }).map(order => (
+                                        <div key={order.orderId} className="bg-white p-4 rounded-xl border shadow-2xl">
                                         <div className="flex justify-between">
                                             <div>
                                                 <h3>
@@ -204,9 +285,7 @@ const AdminDashboard = () => {
 
                                                 <option>PROCESSING</option>
 
-                                                <option>SHIPPED</option>
-
-                       +                         <option>DELIVERED</option>
+                                                <option>SHIPPED</option>        <option>DELIVERED</option>
                                                 <option>CANCELLED</option>
                                             </select>
                                         </div>
@@ -220,8 +299,16 @@ const AdminDashboard = () => {
                         {activeTab === "plants" && (
                             <motion.div initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}>
-                                <h2 className="text-2xl font-bold mb-6">Plants</h2>
 
+                                <div className="flex justify-between items-center mb-6">
+                                    <h2 className="text-2xl font-bold">
+                                        Plants
+                                    </h2>
+                                    <button onClick={() => setShowPlantModal(true)}
+                                    className="bg-green-700 text-white px-6 py-3 rounded-xl">
+                                        + Add Plant
+                                    </button>
+                                </div>
                                 <div className="grid md:grid-cols-3 gap-6">
                                     {plants.map(plant => (
                                         <div key={plant.id}
@@ -244,6 +331,96 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             </div>
+            {
+                showPlantModal && (
+                    <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+                        <div className="bg-white rounded-2xl w-162.5 px-8 py-2">
+                            <h2 className="text-2xl font-bold mb-5">Add Plant</h2>
+                            <div className="grid gap-2">
+                                <input
+                                    placeholder="Plant Name"
+                                    value={plantForm.name}
+                                    onChange={(e) => setPlantForm({...plantForm,name:e.target.value})}
+                                    className="border p-3 rounded-xl" />
+
+                                    <input
+                                    placeholder="Short Description"
+                                    value={plantForm.shortDescription}
+                                    onChange={(e) => setPlantForm({...plantForm,shortDescription:e.target.value})}
+                                    className="border p-3 rounded-xl" />
+
+                                    <input
+                                    placeholder="Long Description"
+                                    value={plantForm.longDescription}
+                                    onChange={(e) => setPlantForm({...plantForm,longDescription:e.target.value})}
+                                    className="border p-3 rounded-xl" />
+
+                                    <input
+                                    placeholder="Price"
+                                    value={plantForm.price}
+                                    onChange={(e) => setPlantForm({...plantForm,price:e.target.value})}
+                                    className="border p-3 rounded-xl" />
+
+                                    <input
+                                    placeholder="Stock"
+                                    value={plantForm.stockQuantity}
+                                    onChange={(e) => setPlantForm({...plantForm,stockQuantity:e.target.value})}
+                                    className="border p-3 rounded-xl" />
+
+                                    <input
+                                    placeholder="Sizes (Small, Medium, Large)"
+                                    value={plantForm.sizes}
+                                    onChange={(e) => setPlantForm({...plantForm,sizes:e.target.value})}
+                                    className="border p-3 rounded-xl" />
+
+                                    <input
+                                    placeholder="Colors"
+                                    value={plantForm.colors}
+                                    onChange={(e) => setPlantForm({...plantForm,colors:e.target.value})}
+                                    className="border p-3 rounded-xl" />
+
+                                    <input
+                                    placeholder="Materials"
+                                    value={plantForm.materials}
+                                    onChange={(e) => setPlantForm({...plantForm,materials:e.target.value})}
+                                    className="border p-3 rounded-xl" />
+
+                                    <input
+                                    placeholder="rating"
+                                    value={plantForm.rating}
+                                    onChange={(e) => setPlantForm({...plantForm,rating:e.target.value})}
+                                    className="border p-3 rounded-xl" />
+
+                                    <input
+                                    placeholder="Image Url"
+                                    value={plantForm.imageUrl}
+                                    onChange={(e) => setPlantForm({...plantForm,imageUrl:e.target.value})}
+                                    className="border p-3 rounded-xl" />
+                            </div>
+                            <div className="flex justify-end gap-4 mt-6">
+                                <button onClick={() => { setShowPlantModal(false);setPlantForm({
+                                    name:"",
+                                    shortDescription:"",
+                                    longDescription:"",
+                                    price:"",
+                                    stockQuantity:"",
+                                    sizes:"",
+                                    colors:"",
+                                    materials:"",
+                                    imageUrl:""
+                                })}}
+                                className="px-5 py-2 border rounded-xl">
+                                    Cancel
+                                </button>
+                                <button onClick={createPlant}
+                                className="bg-green-700 text-white px-6 py-2 rounded-xl">
+                                    Save Plant
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
         </div>
     )
 }

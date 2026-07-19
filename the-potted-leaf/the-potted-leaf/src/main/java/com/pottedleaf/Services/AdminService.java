@@ -32,6 +32,11 @@ public class AdminService {
                 .totalPlants(plantRepository.count())
                 .totalOrders(orderRepository.count())
                 .totalRevenue(getTotalRevenue())
+                .paidOrders(orderRepository.countByStatus("PAID"))
+                .processingOrders((orderRepository.countByStatus("PROCESSING")))
+                .shippedOrders(orderRepository.countByStatus("SHIPPED"))
+                .deliveredOrders(orderRepository.countByStatus("DELIVERED"))
+                .cancelledOrders(orderRepository.countByStatus("CANCELLED"))
                 .build();
     }
 
