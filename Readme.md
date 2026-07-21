@@ -80,15 +80,15 @@ An admin dashboard allows administrators to manage products, users, orders, and 
 
 <td>
 
-<tr>
-<td colspan="2" align="center">
-
 ### 🚚 Order Tracking
 
 <img src="images/order-tracking.png" width="700"/>
 
 </td>
 </tr>
+
+<tr>
+<td colspan="2" align="center">
 
 ### 👨‍💼 Admin Dashboard
 
