@@ -215,28 +215,7 @@ const handleSubmit = async () => {
         )}
 
         {/* ORDERS */}
-        {activeTab === "orders" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}>
-            <h2 className='text-2xl font-bold mb-6 text-green-800'>My Orders</h2>
-
-            {orders.map((order) => (
-              <div 
-                key={order.id}
-                className='border p-4 rounded-xl mb-4'>
-                  <p><span className='font-semibold'>Order ID: </span>{order.orderId}</p>
-                  <p><span className='font-semibold'>Plant: </span>{order.plantName}</p>
-                  <p><span className='font-semibold'>Pot Size: </span>{order.potSize}</p>
-                  <p><span className='font-semibold'>Pot Color: </span>{order.potColor}</p>
-                  <p><span className='font-semibold'>Pot Material: </span>{order.potMaterial}</p>
-                  <p><span className='font-semibold'>Quantity: </span>{order.quantity}</p>
-                  <p><span className='font-semibold'>Plant Price: </span>₹{order.price}</p>
-                  <p><span className='font-semibold'>Status: </span>{order.status}</p>
-                  <p><span className='font-semibold'>Date: </span>{order.orderDate}</p>
-                </div>
-            ))}
-          </motion.div>
-        )}
+        {activeTab === "orders" && (navigate("/orders"))}
 
         {/*Address*/}
         {activeTab === "address" && (

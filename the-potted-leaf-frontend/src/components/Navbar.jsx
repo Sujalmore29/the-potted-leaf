@@ -17,30 +17,30 @@ const Navbar = () => {
         <div className='max-w-7xl mx-auto px-4 py-4 flex items-center justify-between'>
             { /* Logo */}
             <div className='flex items-center gap-2 text-green-800 font-bold text-xl cursor-pointer'
-                onClick={() => scrollToSection("home")}>
+                onClick={() => {scrollToSection("home"),navigate("/")}}>
                     <Leaf size={24}/>
                     The Potted Leaf
             </div>
 
                 {/* Navigation Links */}
                 <div className='flex  items-center gap-8 text-gray-700 font-medium'>
-                    <button onClick={() => scrollToSection("home")} className=' hover:text-green-700 transition'>
+                    <button onClick={() => {scrollToSection("home"),navigate("/")}} className=' hover:text-green-700 transition'>
                         Home
                     </button>
 
-                    <button onClick={() => scrollToSection("shop")} className=' hover:text-green-700 transition'>
+                    <button onClick={() => {scrollToSection("shop"),navigate("/")}} className=' hover:text-green-700 transition'>
                         Shop
                     </button>
 
-                    <button onClick={() => scrollToSection("why-us")} className=' hover:text-green-700 transition'>
+                    <button onClick={() => {scrollToSection("why-us"),navigate("/")}} className=' hover:text-green-700 transition'>
                         Why Us
                     </button>
 
-                    <button onClick={() => scrollToSection("faqs")} className=' hover:text-green-700 transition'>
+                    <button onClick={() => {scrollToSection("faqs"),navigate("/")}} className=' hover:text-green-700 transition'>
                         FAQS
                     </button>
 
-                    <button onClick={() => scrollToSection("contact")} className=' hover:text-green-700 transition hover:underline-offset-2'>
+                    <button onClick={() => {scrollToSection("contact"),navigate("/")}} className=' hover:text-green-700 transition hover:underline-offset-2'>
                         Contact
                     </button>
                 </div>

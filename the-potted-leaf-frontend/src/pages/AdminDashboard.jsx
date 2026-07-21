@@ -2,6 +2,7 @@ import axios from "../api/axios";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast";
+import Navbar from "../components/Navbar";
 
 const AdminDashboard = () => {
     
@@ -116,7 +117,8 @@ const AdminDashboard = () => {
 
     return(
         <div className="min-h-screen bg-green-50">
-            <div className="max-w-7xl mx-auto p-8">
+            <Navbar />
+            <div className="max-w-7xl mx-auto p-8 mt-14">
                 <h1 className="text-4xl font-bold text-green-800 mb-8">
                     Admin Dashboard
                 </h1>
